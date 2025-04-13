@@ -9,6 +9,9 @@ const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
 const REPO_OWNER = "codekripa";
 const DEFAULT_REPO = "NewSongs";
 
+// Get GitHub token from environment variables
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
 let currentRepo = DEFAULT_REPO;
 
 // Cache to store downloaded songs in memory
@@ -39,7 +42,16 @@ exports.getAllSongs = async () => {
 async function getMP3FilesRecursive(path = "") {
   const url = `${GITHUB_API_BASE}/${REPO_OWNER}/${currentRepo}/contents/${path}`;
   try {
-    const response = await fetch(url);
+    const headers = {
+      'Accept': 'application/vnd.github.v3+json'
+    };
+    
+    // Add Authorization header if token is available
+    if (GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+    }
+    
+    const response = await fetch(url, { headers });
     
     // Check if the response is successful
     if (!response.ok) {
