@@ -40,7 +40,22 @@ async function getMP3FilesRecursive(path = "") {
   const url = `${GITHUB_API_BASE}/${REPO_OWNER}/${currentRepo}/contents/${path}`;
   try {
     const response = await fetch(url);
+    
+    // Check if the response is successful
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error(`GitHub API Error: ${response.status} - ${errorData.message}`);
+      throw new Error(`GitHub API Error: ${response.status} - ${errorData.message}`);
+    }
+    
     const files = await response.json();
+    
+    // Check if files is an array
+    if (!Array.isArray(files)) {
+      console.error('GitHub API did not return an array of files:', files);
+      throw new Error('Invalid response from GitHub API');
+    }
+    
     let mp3Files = [];
     
     for (let file of files) {

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: one-audio-streamer
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    network:
+      outbound:
+        - hostname: api.github.com
+          port: 443
+          protocol: tcp
+        - hostname: raw.githubusercontent.com
+          port: 443
+          protocol: tcp 
