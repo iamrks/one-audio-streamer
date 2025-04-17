@@ -27,7 +27,6 @@ exports.getCurrentRepo = () => {
 
 exports.getAllSongs = async () => {
   try {
-    songCache.clear();
     const songs = await getMP3FilesRecursive();
     return songs.map((song, index) => ({
       id: index,
